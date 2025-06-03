@@ -1,5 +1,8 @@
-import { Student } from './types';
+"use server"
+
 import { User } from "@supabase/supabase-js";
+
+
 import { createClient } from "./supabase/server";
 
 export const AddStudent = async(user:User|null)=>{

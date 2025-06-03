@@ -17,6 +17,7 @@ import { getTeacherById } from "@/utils/teacher";
 import { Skeleton } from "@/components/ui/skeleton";
 import { User } from "@supabase/supabase-js";
 import { GetUser } from "@/utils/getuser";
+import { Class, Teacher } from "@/utils/types";
 
 export default function ClassJoinedCard({ Class }: { Class: Class }) {
   const [Teacher, setTeacher] = useState<Teacher>();
@@ -26,7 +27,7 @@ export default function ClassJoinedCard({ Class }: { Class: Class }) {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-  console.log(Teacher);
+
   //GET TEACHER INFORMATION
   useEffect(() => {
     const getTeacher = async () => {
