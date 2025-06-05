@@ -39,21 +39,3 @@ export const createGroup = async (classId:string, groupNum:string)=>{
 }
 
 
-// !!!!!!! CHANGE IT ITS WRONG
-
-//Delete a student from his group at specific class
-export const deleteStudentFromGrp = async (classId:string, user:User)=>{
-    const supabase = await createClient();
-     // student_groups  is a view created in the postgress sql editeur 
-     const {data, error} = await supabase.from("student_groups").select("*").eq("student_id", user?.id).eq("class_id", classId)
-
-     if(error){
-        throw error
-     }
-
-     if(data?.length != 0){
-         data?.map(async (studentGroup)=>(
-             await supabase.from("StudentGroup").delete().eq("studentg_id", studentGroup.studentg_id)
-         ))
-     }
-}

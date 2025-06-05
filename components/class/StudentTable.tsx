@@ -39,7 +39,10 @@ import { Student } from "@/utils/types";
 import { AvatarIcon } from "../AvatarIcon";
 import DeleteStudentBut from "./created/students/DeleteStudentBut";
 
-export const columns: ColumnDef<Student>[] = [
+
+export function StudentTable({ data, role }: { data: Student[], role?:string }) {
+
+ const columns: ColumnDef<Student>[] = [
   {
     accessorKey: "studentImg",
     header: "Img",
@@ -100,20 +103,19 @@ export const columns: ColumnDef<Student>[] = [
             >
               Copy Student Name
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            {role === "teacher" &&  <DropdownMenuItem>
               <DeleteStudentBut
                 studentId={student.student_id as string}
                 classId={student.class_id as string}
               />
-            </DropdownMenuItem>
+            </DropdownMenuItem>}
+          
           </DropdownMenuContent>
         </DropdownMenu>
       );
     },
   },
 ];
-
-export function StudentTable({ data }: { data: Student[] }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []

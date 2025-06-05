@@ -13,7 +13,7 @@ export default async function page({
 
   return (
     <div className="p-3">
-      <StudentTable data={Students as Student[]} />
+      <StudentTable role="teacher" data={Students as Student[]} />
     </div>
   );
 }

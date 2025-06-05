@@ -36,10 +36,8 @@ export const GetStudents = async (classId: string | null)=>{
     const supabase = await createClient();
     //Get the id of the students that joined the class
     const {data} = await supabase.from("Student_info").select("*").eq("class_id",classId );
-    console.log(data)
-    if(data){
+    
         return data as Student[]
-    }
-    return null
+  
 
 }

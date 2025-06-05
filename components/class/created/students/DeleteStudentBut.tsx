@@ -1,6 +1,6 @@
 "use client";
 import { DeleteStudent } from "@/actions/DeleteStudent";
-import React, { useActionState, useEffect } from "react";
+import React from "react";
 import { toast } from "sonner";
 
 export default function DeleteStudentBut({
