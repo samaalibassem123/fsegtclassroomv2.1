@@ -115,7 +115,7 @@ export function SelectStudents({
                       </TableCell>
                       <TableCell>{person.student_name}</TableCell>
                       <TableCell>{person.student_mail}</TableCell>
-                      <TableCell>04</TableCell>
+                      <TableCell>{person.group_num}</TableCell>
                     </TableRow>
                   )
               )}
