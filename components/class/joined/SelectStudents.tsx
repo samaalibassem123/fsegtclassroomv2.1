@@ -52,7 +52,7 @@ export function SelectStudents({
   useEffect(()=>{
     if(sendStudents) sendStudents(selectedPeople);
   }, [selectedPeople])
-
+  
   return (
     <div className="space-y-4">
       <Input
@@ -67,12 +67,12 @@ export function SelectStudents({
         <ul className="flex gap-2 flex-wrap w-full">
           {selectedPeople.map((person) => (
             <li
-              key={person.student_id}
+              key={person.student_id as string}
               className="flex gap-2 border p-2 text-sm rounded-md items-center"
             >
               <AvatarIcon img={person.studentImg as string} />
               <span className="text-nowrap font-normal">
-                {person.student_name}
+                {person.student_name} 
               </span>
               <Button
                 onClick={() => handleSelect(person)}
@@ -101,7 +101,7 @@ export function SelectStudents({
               {filteredPeople.map(
                 (person) =>
     ( user.id && user.id != person.student_id &&
-                    <TableRow key={person.student_id}>
+                    <TableRow key={person.student_id as string}>
                       <TableCell>
                         <Checkbox
                           checked={selectedPeople.some(
