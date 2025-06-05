@@ -72,6 +72,13 @@ export function StudentTable({ data, role }: { data: Student[], role?:string }) 
       <div className="lowercase">{row.getValue("student_mail")}</div>
     ),
   },
+   {
+    accessorKey: "group_num",
+    header: "Group",
+    cell: ({ row }) => (
+      <div className="capitalize">A0{row.getValue("group_num")}</div>
+    ),
+  },
   {
     id: "actions",
     enableHiding: false,
@@ -90,6 +97,7 @@ export function StudentTable({ data, role }: { data: Student[], role?:string }) 
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem
+            className=" cursor-pointer"
               onClick={() =>
                 navigator.clipboard.writeText(student.student_mail as string)
               }
@@ -97,6 +105,7 @@ export function StudentTable({ data, role }: { data: Student[], role?:string }) 
               Copy Email
             </DropdownMenuItem>
             <DropdownMenuItem
+            className=" cursor-pointer"
               onClick={() =>
                 navigator.clipboard.writeText(student.student_name as string)
               }

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useActionState, useEffect, useRef, useState } from "react";
 import {
   Drawer,
   DrawerContent,
@@ -26,6 +26,7 @@ import { Progress } from "@/components/ui/progress";
 import { createClient } from "@/utils/supabase/client";
 import { toast } from "sonner";
 import { ComputeFileHash } from "@/utils/Files";
+import { SubmitWork } from "@/actions/Courses/SubmitWork";
 
 
 
@@ -95,7 +96,7 @@ export default function SubmissionForm({ tdId }: { tdId: string }) {
 
               if (Sumbitref.current && progress == 100) {
                 Sumbitref.current.disabled = false;
-                Sumbitref.current.innerHTML = "Create";
+                Sumbitref.current.innerHTML = "submit";
               }
               return progress;
             });
@@ -204,6 +205,22 @@ export default function SubmissionForm({ tdId }: { tdId: string }) {
     getuser();
   }, []);
 
+  //SUBMIT WORK
+    const [state, action, pending] = useActionState(
+      (state: any, formdata: FormData) =>
+        SubmitWork(state, formdata, documents,SelectedStudents, tdId),
+      undefined
+    );
+
+    useEffect(
+      ()=>{
+        if(state?.warning){
+          toast.warning(state.warning, {position:"top-center",style:{backgroundColor: "#e6e600"}})
+        }
+        
+      }
+      ,[state])
+
   return (
     <Drawer>
       <DrawerTrigger className="text-sm flex items-center gap-1.5 item border   my-2 p-1 px-3 rounded-md cursor-pointer hover:scale-102 focus:scale-98 transition-all hover:bg-black dark:hover:bg-white dark:hover:text-black hover:text-white">
@@ -217,7 +234,7 @@ export default function SubmissionForm({ tdId }: { tdId: string }) {
           <DrawerDescription>Please Fill those filds ✏️</DrawerDescription>
           <Separator />
         </DrawerHeader>
-        <form className="h-[40svh] overflow-y-scroll">
+        <form action={action} className="h-[40svh] overflow-y-scroll space-y-4">
           <div className="flex flex-col gap-2 m-2 ">
             <Label className="text-lg">📚 Document :</Label>
             <FileUploader sendFiles={HandleFilesData}/>
@@ -233,7 +250,7 @@ export default function SubmissionForm({ tdId }: { tdId: string }) {
                 (optional)
               </span>
             </Label>
-            <Textarea placeholder="Add A description for your submission if u want" />
+            <Textarea name="desc" placeholder="Add A description for your submission if u want" />
           </div>
           <Separator />
 
@@ -250,11 +267,11 @@ export default function SubmissionForm({ tdId }: { tdId: string }) {
               <SelectStudents sendStudents={HandleSelectedStudents} people={students} user={user as User} />
             )}
           </div>
-          <Separator />
-        </form>
-        <DrawerFooter className="border-t-black/40 border-t-[1px]">
-          <Button className="" ref={Sumbitref}>Submit</Button>
+          <Separator /> <DrawerFooter className="border-t-black/40 border-t-[1px]">
+          <Button  disabled={pending} className=" cursor-pointer" ref={Sumbitref}>Submit</Button>
         </DrawerFooter>
+        </form>
+     
       </DrawerContent>
     </Drawer>
   );
