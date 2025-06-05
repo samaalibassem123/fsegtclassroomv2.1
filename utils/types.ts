@@ -70,3 +70,10 @@ export interface studentClass{
   class_id? :string|undefined|null;
   student_id? :string|undefined|null;
 }
+
+export interface TdSub{
+    tdsub_id? :string|undefined|null;
+    created_at? :string|undefined|null;
+    group_id? :string|undefined|null;
+    td_id? :string|undefined|null;
+}

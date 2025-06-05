@@ -65,7 +65,7 @@ export function SelectStudents({
       <div className="w-full">
         <h2 className="text-lg font-semibold mb-2">Selected Students</h2>
         <ul className="flex gap-2 flex-wrap w-full">
-          {selectedPeople.length === 0 ?<span className="text-sm text-gray-500">None is selected</span>:selectedPeople.map((person) => (user && user?.id != person.student_id &&
+          {selectedPeople.length === 0 ?<span className="text-sm text-gray-500">None is selected</span>:selectedPeople.map((person) => (
             <li
               key={person.student_id as string}
               className="flex gap-2 border p-2 text-sm rounded-md items-center"

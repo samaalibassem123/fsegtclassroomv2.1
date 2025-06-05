@@ -32,7 +32,7 @@ import { SubmitWork } from "@/actions/Courses/SubmitWork";
 
 
 
-export default function SubmissionForm({ tdId }: { tdId: string }) {
+export default function SubmissionForm({ tdId, classId }: { tdId: string, classId:string }) {
   //HANLE FILES
   const [files, setFiles] = useState<File[]>([]);
     const Sumbitref = useRef<HTMLButtonElement>(null);
@@ -191,8 +191,7 @@ export default function SubmissionForm({ tdId }: { tdId: string }) {
   }
   useEffect(() => {
     const getStds = async () => {
-      const Students = await GetStudents(tdId);
-
+      const Students = await GetStudents(classId as string);
       setStudents(Students as Student[]);
     };
     const getuser = async () => {
@@ -208,16 +207,19 @@ export default function SubmissionForm({ tdId }: { tdId: string }) {
   //SUBMIT WORK
     const [state, action, pending] = useActionState(
       (state: any, formdata: FormData) =>
-        SubmitWork(state, formdata, documents,SelectedStudents, tdId),
+        SubmitWork(state, formdata, documents,SelectedStudents, tdId, classId),
       undefined
     );
 
     useEffect(
       ()=>{
         if(state?.warning){
-          toast.warning(state.warning, {position:"top-center",style:{backgroundColor: "#e6e600"}})
+          toast.warning(state.warning, {position:"top-center",style:{backgroundColor: "#e6e600", color:"white"}})
         }
-        
+        else if(state?.succes){
+          toast.success(state.succes, {position:"top-center",style:{backgroundColor: "green", color:"white"}})
+          window.location.reload()
+        }
       }
       ,[state])
 
@@ -228,13 +230,13 @@ export default function SubmissionForm({ tdId }: { tdId: string }) {
         <ArrowDownToLine />
       </DrawerTrigger>
 
-      <DrawerContent className="p-5">
+      <DrawerContent className="p-5 h-[80vh] ">
         <DrawerHeader>
           <DrawerTitle>Work submition🎖️</DrawerTitle>
           <DrawerDescription>Please Fill those filds ✏️</DrawerDescription>
           <Separator />
         </DrawerHeader>
-        <form action={action} className="h-[40svh] overflow-y-scroll space-y-4">
+        <form action={action} className="h-[80svh] overflow-y-scroll space-y-4">
           <div className="flex flex-col gap-2 m-2 ">
             <Label className="text-lg">📚 Document :</Label>
             <FileUploader sendFiles={HandleFilesData}/>
@@ -268,7 +270,7 @@ export default function SubmissionForm({ tdId }: { tdId: string }) {
             )}
           </div>
           <Separator /> <DrawerFooter className="border-t-black/40 border-t-[1px]">
-          <Button  disabled={pending} className=" cursor-pointer" ref={Sumbitref}>Submit</Button>
+          <Button  disabled={pending} className=" cursor-pointer" ref={Sumbitref}>{pending ? <span className=" animate-pulse">Submitting ...</span>: "submit"}</Button>
         </DrawerFooter>
         </form>
      
