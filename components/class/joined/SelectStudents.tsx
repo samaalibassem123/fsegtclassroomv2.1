@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -14,18 +14,25 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Student } from "@/utils/types";
 import { AvatarIcon } from "@/components/AvatarIcon";
-import { GetUser } from "@/utils/getuser";
+
 import { User } from "@supabase/supabase-js";
 
-export function SelectStudents({
-  people,
-  user,
-}: {
+type ChildProps ={
+  sendStudents? : (data:Student[])=>void;
   people: Student[];
   user: User;
-}) {
+}
+
+export function SelectStudents({
+  sendStudents,
+  people,
+  user,
+}: 
+  ChildProps
+) {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPeople, setSelectedPeople] = useState<Student[]>([]);
+
 
   const filteredPeople = people.filter(
     (person) =>
@@ -35,11 +42,16 @@ export function SelectStudents({
 
   const handleSelect = (person: Student) => {
     setSelectedPeople((prev) =>
-      prev.some((p) => p.student_id === person.student_id)
+      prev.some((p) => p.student_id === person.student_id )
         ? prev.filter((p) => p.student_id !== person.student_id)
         : [...prev, person]
     );
   };
+
+  //Send the selected students to the parent component
+  useEffect(()=>{
+    if(sendStudents) sendStudents(selectedPeople);
+  }, [selectedPeople])
 
   return (
     <div className="space-y-4">
@@ -88,7 +100,7 @@ export function SelectStudents({
             <TableBody>
               {filteredPeople.map(
                 (person) =>
-                  user.id != person.student_id && (
+    ( user.id && user.id != person.student_id &&
                     <TableRow key={person.student_id}>
                       <TableCell>
                         <Checkbox
@@ -99,7 +111,7 @@ export function SelectStudents({
                         />
                       </TableCell>
                       <TableCell>
-                        <AvatarIcon img="" />
+                        <AvatarIcon img={person.studentImg?person.studentImg as string:""} />
                       </TableCell>
                       <TableCell>{person.student_name}</TableCell>
                       <TableCell>{person.student_mail}</TableCell>

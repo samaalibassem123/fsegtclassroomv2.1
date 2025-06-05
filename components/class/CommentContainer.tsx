@@ -1,3 +1,4 @@
+"use client"
 import { AvatarIcon } from "@/components/AvatarIcon";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
@@ -8,10 +9,19 @@ import { Comment } from "@/utils/types";
 
 import React, { useEffect, useState } from "react";
 import DeleteComment from "./DeleteComment";
+import { GetUser } from "@/utils/getuser";
+import { User } from "@supabase/supabase-js";
 
 export default function CommentContainer({ courseId }: { courseId: string }) {
+  const [user, setUser] = useState<User>()
   const [comments, setComments] = useState<Comment[]>([]);
   useEffect(() => {
+    const getUser = async()=>{
+      const  USER = await GetUser();
+      if(USER) setUser(USER)
+    }
+    getUser()
+
     const fetchComments = async () => {
       const Comments = await getComments(courseId);
       if (Comments) {
@@ -75,7 +85,10 @@ export default function CommentContainer({ courseId }: { courseId: string }) {
                   </span>
                 </div>
                 {/* delete comment */}
-                <DeleteComment CommentId={comment.comment_id as string} />
+                {
+                  comment.comment_owner === user?.id &&<DeleteComment CommentId={comment.comment_id as string} />
+                }
+                
               </div>
               <p className="p-2">{comment.context as string}</p>
               <Separator />

@@ -4,13 +4,18 @@ import { useState, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { Upload } from "lucide-react";
 
-export function FileUploader() {
+type ChildProps = {
+  sendFiles?: (data: File[]) => void;
+};
+
+export function FileUploader({sendFiles}:ChildProps) {
   // Define the files state with type File[]
   const [files, setFiles] = useState<File[]>([]);
 
   // Declare onDrop with the type of acceptedFiles as an array of File objects.
   const onDrop = useCallback((acceptedFiles: File[]) => {
     setFiles(acceptedFiles);
+    if(sendFiles) sendFiles(acceptedFiles)
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });

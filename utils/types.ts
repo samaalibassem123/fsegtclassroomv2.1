@@ -16,6 +16,8 @@ export interface Student {
   studentImg? :string|undefined|null;
   student_mail? :string|undefined|null;
   class_id? :string|undefined|null;
+  group_id? :string|undefined|null;
+  group_num? :string|undefined|null;
 }
 
 
@@ -63,9 +65,8 @@ export interface Group{
   class_id? :string|undefined|null;
 }
 
-export interface StudentGroup{
-  studentg_id? :string|undefined|null;
-  created_at? :string|undefined|null;
-  student_id? :string|undefined|null;
+export interface studentClass{
   group_id? :string|undefined|null;
+  class_id? :string|undefined|null;
+  student_id? :string|undefined|null;
 }

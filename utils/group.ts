@@ -2,7 +2,7 @@
 
 import { User } from "@supabase/supabase-js";
 import { createClient } from "./supabase/server"
-import { Group, StudentGroup } from "./types";
+import { Group } from "./types";
 
 //FIND GROUP BY CLASS ID AND GROUP NUMBER
 export const findGroupByNum = async(classId: string, groupNum:string)=>{
@@ -37,22 +37,9 @@ export const createGroup = async (classId:string, groupNum:string)=>{
         return data as Group
     }
 }
-// add the student to the studentgroup table
-export const CreateStudentGroup = async (studentId: string, groupId:string)=>{
-    const supabase = await createClient();
-    const student_group:StudentGroup[] = [
-        {
-            student_id:studentId,
-            group_id:groupId
-        }
-    ]
-    const {error} = await supabase.from("StudentGroup").insert(student_group)
-    if(error){
-        console.log(error)
-        return error
-    }
-    return null
-}
+
+
+// !!!!!!! CHANGE IT ITS WRONG
 
 //Delete a student from his group at specific class
 export const deleteStudentFromGrp = async (classId:string, user:User)=>{
@@ -69,5 +56,4 @@ export const deleteStudentFromGrp = async (classId:string, user:User)=>{
              await supabase.from("StudentGroup").delete().eq("studentg_id", studentGroup.studentg_id)
          ))
      }
-
 }

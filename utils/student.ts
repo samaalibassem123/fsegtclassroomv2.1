@@ -4,6 +4,7 @@ import { User } from "@supabase/supabase-js";
 
 
 import { createClient } from "./supabase/server";
+import { Student } from "./types";
 
 export const AddStudent = async(user:User|null)=>{
 
@@ -18,9 +19,9 @@ export const AddStudent = async(user:User|null)=>{
     ])
 }
 
-export const GetStudentById = async (StudentId:String)=>{
+export const GetStudentById = async (StudentId:string)=>{
     const supabase = await createClient();
-    const student = await supabase.from("student").select("*").eq("student_id", StudentId).single()
+    const student = await supabase.from("Student_info").select("*").eq("student_id", StudentId).single()
     
     if(student){
         return student
@@ -34,30 +35,11 @@ export const GetStudents = async (classId: string | null)=>{
 
     const supabase = await createClient();
     //Get the id of the students that joined the class
-    const {data} = await supabase.from("studentClass").select("*").eq("class_id",classId );
-
-    //get all the information about the students
+    const {data} = await supabase.from("Student_info").select("*").eq("class_id",classId );
+    console.log(data)
     if(data){
-            const Students = await Promise.all(
-                data.map(async (studentClass) => {
-                  const studentId = studentClass.student_id as string;
-                  const student =  await GetStudentById(studentId);
-                  const  studentInfo = {
-                    student_id:studentId,
-                    student_name:student?.data.student_name as string,
-                    studentImg:student?.data.studentImg as string,
-                    student_mail:student?.data.student_mail as string,
-                    class_id: classId as string,
-                  }
-                  return studentInfo
-                })
-              );
-            if(Students){
-                return Students
-            }
-            return null
-    
-        }
-        return null
+        return data as Student[]
+    }
+    return null
 
 }
