@@ -239,12 +239,12 @@ export default function SubmissionForm({ tdId }: { tdId: string }) {
 
           <div className="flex flex-col gap-2 w-full">
             <Label className="text-xl ">
-              Add Persons that worked with you in this project:
+              Add Students that worked with you in this project:
               <span className="text-sm text-gray-600 animate-pulse">
                 (optional)
               </span>
             </Label>
-            {students.length === 0 ? (
+            {students.length === 1 ? (
               "There is no students in this class"
             ) : (
               <SelectStudents sendStudents={HandleSelectedStudents} people={students} user={user as User} />
