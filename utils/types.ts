@@ -64,6 +64,17 @@ export interface Group{
   group_num? :string|undefined|null;
   class_id? :string|undefined|null;
 }
+type Page = {
+  name: string;
+  url: string;
+  emoji: string;
+};
+
+export type NavGroup = {
+  name: string;
+  emoji: string;
+  pages: Page[];
+};
 
 export interface studentClass{
   group_id? :string|undefined|null;

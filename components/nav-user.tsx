@@ -80,9 +80,9 @@ export function NavUser({
             <DropdownMenuSeparator />
             <ModeTogle />
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="flex items-center justify-center">
+            <div className="flex items-center justify-center">
               <LogoutButton />
-            </DropdownMenuItem>
+            </div>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>

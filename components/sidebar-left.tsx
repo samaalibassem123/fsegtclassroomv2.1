@@ -29,11 +29,12 @@ import { NavUser } from "./nav-user";
 
 import { Button } from "./ui/button";
 import Link from "next/link";
-import { Class, Teacher } from "@/utils/types";
+import { Class, NavGroup, Teacher } from "@/utils/types";
 import { formatDate } from "@/utils/date";
 
 import { Separator } from "./ui/separator";
 import ShowCode from "./class/ShowCode";
+import { getGroups } from "@/utils/group";
 
 export function SidebarLeft({
   classType,
@@ -56,7 +57,7 @@ export function SidebarLeft({
   const pathname = usePathname();
   // Function to check if a link is active
   const ActiveLink = (href: string) => pathname === href;
-  //GET GROUPS
+  
   const data = {
     navMain: [
       {
@@ -112,114 +113,16 @@ export function SidebarLeft({
         ),
       },
     ],
-    groups: [
-      {
-        name: "Group A01",
-        emoji: "🏫",
-        pages: [
-          {
-            name: "Td Submissions",
-            url: `/user/${User?.id}/class/${ClassType}/${CLass.class_id}/group1/td`,
-            emoji: "📔",
-          },
-          {
-            name: "Td submissions by grp",
-            url: `/user/${User?.id}/class/${ClassType}/${CLass.class_id}/group1/tdbgroup`,
-            emoji: "🤝",
-          },
-          {
-            name: "Notes",
-            url: `/user/${User?.id}/class/${ClassType}/${CLass.class_id}/group1/notes`,
-            emoji: "🌟",
-          },
-        ],
-      },
-      {
-        name: "Group A02",
-        emoji: "🏫",
-        pages: [
-          {
-            name: "Td Submissions",
-            url: `/user/${User?.id}/class/${ClassType}/${CLass.class_id}/group2/td`,
-            emoji: "📔",
-          },
-          {
-            name: "Td submissions by grp",
-            url: `/user/${User?.id}/class/${ClassType}/${CLass.class_id}/group2/tdbgroup`,
-            emoji: "🤝",
-          },
-          {
-            name: "Notes",
-            url: `/user/${User?.id}/class/${ClassType}/${CLass.class_id}/group2/notes`,
-            emoji: "🌟",
-          },
-        ],
-      },
-      {
-        name: "Group A03",
-        emoji: "🏫",
-        pages: [
-          {
-            name: "Td Submissions",
-            url: `/user/${User?.id}/class/${ClassType}/${CLass.class_id}/group3/td`,
-            emoji: "📔",
-          },
-          {
-            name: "Td submissions by grp",
-            url: `/user/${User?.id}/class/${ClassType}/${CLass.class_id}/group3/tdbgroup`,
-            emoji: "🤝",
-          },
-          {
-            name: "Notes",
-            url: `/user/${User?.id}/class/${ClassType}/${CLass.class_id}/group3/notes`,
-            emoji: "🌟",
-          },
-        ],
-      },
-      {
-        name: "Group A04",
-        emoji: "🏫",
-        pages: [
-          {
-            name: "Td Submissions",
-            url: "#",
-            emoji: "📔",
-          },
-          {
-            name: "Td submissions by grp",
-            url: "#",
-            emoji: "🤝",
-          },
-          {
-            name: "Notes",
-            url: "#",
-            emoji: "🌟",
-          },
-        ],
-      },
-      {
-        name: "Group A05",
-        emoji: "🏫",
-        pages: [
-          {
-            name: "Td Submissions",
-            url: "#",
-            emoji: "📔",
-          },
-          {
-            name: "Td submissions by grp",
-            url: "#",
-            emoji: "🤝",
-          },
-          {
-            name: "Notes",
-            url: "#",
-            emoji: "🌟",
-          },
-        ],
-      },
-    ],
   };
+  //GET GROUPS
+  const [groups, setGroups] = React.useState<NavGroup[]>([])
+  React.useEffect(()=>{
+    const Groups =async ()=>{
+      const gps = await getGroups(CLass,ClassType)
+      if(gps) setGroups(gps)
+    }
+    Groups();
+  },[])
 
   const { isMobile } = useSidebar();
 
@@ -241,7 +144,7 @@ export function SidebarLeft({
         <NavMain items={data.navMain} />
       </SidebarHeader>
       <SidebarContent>
-        <NavGroups groups={data.groups} />
+        <NavGroups groups={groups} />
       </SidebarContent>
       <SidebarRail />
       <Separator />
