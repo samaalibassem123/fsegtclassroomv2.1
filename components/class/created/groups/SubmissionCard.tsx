@@ -1,4 +1,5 @@
-import React from "react";
+"use client"
+import React, { lazy, Suspense, useEffect, useState } from "react";
 import { DonutChart } from "../../DonutChart";
 import {
   Accordion,
@@ -8,13 +9,17 @@ import {
 } from "@/components/ui/accordion";
 import { Course, SubStudentInfoView } from "@/utils/types";
 import { formatDate } from "@/utils/date";
-import StudentSubCard from "./StudentSubCard";
+
 import { Input } from "@/components/ui/input";
 import { getSubOwners } from "@/utils/student";
 import { calcTdSubmitPercentage } from "@/utils/TD";
 
+import SubOwnerLoading from "@/components/skeletons/SubOwnerLoading";
 
-export default async function SubmissionCard({
+const StudentSubCard = lazy(()=>import("./StudentSubCard"))
+
+
+export default function SubmissionCard({
   Td,
   groupNum
 }: {
@@ -22,10 +27,24 @@ export default async function SubmissionCard({
   groupNum:string
  
 }) {
-
-  //get td owner submissions
-  const tdSubOwners = await getSubOwners(Td.course_id as string, groupNum) as SubStudentInfoView[]
-  const percen = await calcTdSubmitPercentage(Td.class_id as string, Td.course_id as string, groupNum)
+  const [tdSubOwners, setSubOwner] = useState<SubStudentInfoView[]>([])
+  const [percen, setPercen] = useState(0)
+  useEffect(()=>{
+//get td owner submissions
+  const SubOwners = async()=>{
+   const subowners =  await getSubOwners(Td.course_id as string, groupNum) as SubStudentInfoView[]
+    if(subowners)
+    setSubOwner(subowners)
+  }
+  const Percentage =async()=>{ 
+    const percentage = await calcTdSubmitPercentage(Td.class_id as string, Td.course_id as string, groupNum)
+    if(percentage)
+    setPercen(percentage)
+  }
+  SubOwners()
+  Percentage()
+  }, [])
+  
 
   
 
@@ -46,13 +65,15 @@ export default async function SubmissionCard({
         </AccordionTrigger>
         <AccordionContent className=" space-y-2">
           <p className="p-1">{Td.course_descriptions}</p>
-          <DonutChart Percentage={percen as number}   />
+          <DonutChart Percentage={percen as number} />
           <div className="p-2 space-y-3">
               <p className=" underline ">Students Submissions :</p>
                 <Input placeholder="search by student name..." />
                 <div className="space-y-2.5 group">
                   {tdSubOwners.length ===0?<span className="text-sm p-1 text-gray-600">No work submitted for now 😞</span>:tdSubOwners.map((student:SubStudentInfoView)=>(
-                  <StudentSubCard key={student.tdsub_id as string} SubOwner={student} />
+                    <Suspense fallback={<SubOwnerLoading/>} key={student.tdsub_id as string}>
+                      <StudentSubCard  SubOwner={student} />
+                    </Suspense>
                   ))}
                 </div>
           </div>
