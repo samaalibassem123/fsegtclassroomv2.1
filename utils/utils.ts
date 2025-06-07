@@ -30,3 +30,4 @@ export function isImageFilename(filename: string) {
     const lower = filename.toLowerCase();
     return imageExtensions.some((ext) => lower.endsWith(`.${ext}`));
   }
+

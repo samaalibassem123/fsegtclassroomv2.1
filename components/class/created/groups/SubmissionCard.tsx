@@ -6,19 +6,29 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Course } from "@/utils/types";
+import { Course, SubStudentInfoView } from "@/utils/types";
 import { formatDate } from "@/utils/date";
 import StudentSubCard from "./StudentSubCard";
 import { Input } from "@/components/ui/input";
-import GroupSubCard from "./GroupSubCard";
+import { getSubOwners } from "@/utils/student";
+import { calcTdSubmitPercentage } from "@/utils/TD";
 
-export default function SubmissionCard({
+
+export default async function SubmissionCard({
   Td,
-  tdType = "alone",
+  groupNum
 }: {
   Td: Course;
-  tdType?: string;
+  groupNum:string
+ 
 }) {
+
+  //get td owner submissions
+  const tdSubOwners = await getSubOwners(Td.course_id as string, groupNum) as SubStudentInfoView[]
+  const percen = await calcTdSubmitPercentage(Td.class_id as string, Td.course_id as string, groupNum)
+
+  
+
   return (
     <Accordion
       type="single"
@@ -36,33 +46,15 @@ export default function SubmissionCard({
         </AccordionTrigger>
         <AccordionContent className=" space-y-2">
           <p className="p-1">{Td.course_descriptions}</p>
-          <DonutChart />
+          <DonutChart Percentage={percen as number}   />
           <div className="p-2 space-y-3">
-            {tdType === "alone" ? (
               <p className=" underline ">Students Submissions :</p>
-            ) : (
-              <p className=" underline ">Group Submissions :</p>
-            )}
-
-            {tdType === "alone" ? (
-              <>
                 <Input placeholder="search by student name..." />
                 <div className="space-y-2.5 group">
-                  <StudentSubCard tdsubId="test" />
-                  <StudentSubCard tdsubId="test" />
-                  <StudentSubCard tdsubId="tes" />
+                  {tdSubOwners.length ===0?<span className="text-sm p-1 text-gray-600">No work submitted for now 😞</span>:tdSubOwners.map((student:SubStudentInfoView)=>(
+                  <StudentSubCard key={student.tdsub_id as string} SubOwner={student} />
+                  ))}
                 </div>
-              </>
-            ) : (
-              <>
-                <Input placeholder="search by group name..." />
-                <div className="space-y-2.5 group">
-                  <GroupSubCard tdsubId="tes" />
-                  <GroupSubCard tdsubId="tes" />
-                  <GroupSubCard tdsubId="tes" />
-                </div>
-              </>
-            )}
           </div>
         </AccordionContent>
       </AccordionItem>

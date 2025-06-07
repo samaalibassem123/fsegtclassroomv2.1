@@ -55,17 +55,17 @@ export const getGroups = async ( CLass:Class, ClassType:string)=>{
         let GROUPS: NavGroup[] = []
         groups.map((group:Group)=>{
             GROUPS.push(   {
-            name: "Group A01",
+            name: "Group A0"+group.group_num as string,
             emoji: "🏫",
             pages: [
             {
                 name: "Td Submissions",
-                url: `/user/${user?.id}/class/${ClassType}/${CLass.class_id}/group${group.group_num}/td`,
+                url: `/user/${user?.id}/class/${ClassType}/${CLass.class_id as string}/${group.group_num as string}/td`,
                 emoji: "📔",
             },
             {
                 name: "Notes",
-                url: `/user/${user?.id}/class/${ClassType}/${CLass.class_id}/group${group.group_num}/notes`,
+                url: `/user/${user?.id}/class/${ClassType}/${CLass.class_id as string}/${group.group_num as string}/notes`,
                 emoji: "🌟",
             },
             ],

@@ -17,7 +17,7 @@ export default function TextHover({ children, text }: TooltipProps) {
       <Tooltip>
         <TooltipTrigger>{children}</TooltipTrigger>
         <TooltipContent>
-          <div>{text}</div>
+          <div className=" cursor-pointer">{text}</div>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>

@@ -41,3 +41,12 @@ export const GetStudents = async (classId: string | null)=>{
   
 
 }
+
+export const getSubOwners = async (tdId:string, groupNum:string)=>{
+    const supabase = await createClient()
+    const {data, error} = await supabase.from("SubStudent_info").select("*").eq("td_id", tdId).eq("group_num",groupNum).eq("role", "owner")
+    if(error){
+        throw error
+    }
+    return data
+}

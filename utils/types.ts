@@ -88,3 +88,19 @@ export interface TdSub{
     group_id? :string|undefined|null;
     td_id? :string|undefined|null;
 }
+
+
+export interface SubStudentInfoView{
+  subStudent_id? :string|undefined|null;
+   tdsub_id? :string|undefined|null;
+  created_at? :string|undefined|null;
+  group_id? :string|undefined|null;
+  td_id? :string|undefined|null;
+  student_id? :string|undefined|null;
+  student_name? :string|undefined|null;
+  student_mail? :string|undefined|null;
+  studentImg? :string|undefined|null;
+  group_num? :string|undefined|null;
+  role? :string|undefined|null;
+  
+}

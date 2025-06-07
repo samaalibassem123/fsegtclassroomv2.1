@@ -1,5 +1,4 @@
 "use client";
-
 import { TrendingUp } from "lucide-react";
 import {
   Label,
@@ -18,8 +17,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ChartConfig, ChartContainer } from "@/components/ui/chart";
-const chartData = [
-  { browser: "safari", submissions: 30, fill: "var(--color-safari)" },
+
+
+
+
+export function DonutChart({Percentage}:{Percentage:number}) {
+
+  const chartData = [
+  { browser: "safari", submissions: Percentage * 100, fill: "var(--color-safari)" },
 ];
 
 const chartConfig = {
@@ -31,8 +36,6 @@ const chartConfig = {
     color: "#50A3FF",
   },
 } satisfies ChartConfig;
-
-export function DonutChart() {
   const date = new Date();
   const DATE = new Intl.DateTimeFormat("default", { dateStyle: "full" }).format(
     date

@@ -31,7 +31,9 @@ export const SubmitWork =async (state:any, formData:FormData, documents:Doc[],se
     //FIRST WE CREATE THE TDSUBMISSION
     const {data, error} = await supabase.from("TdSubmission").insert([{
         group_id:group_id as string,
-        td_id:tdId as string
+        td_id:tdId as string,
+        descrption:Desc as string,
+        
     }]).select() 
     if(error){
         return {error:"Error in the server try another time"}
@@ -59,8 +61,9 @@ export const SubmitWork =async (state:any, formData:FormData, documents:Doc[],se
         
 })
     //Insert Students that woeked in this project
+
     //first we insert the owner of the work (the user)
-    await supabase.from("SubStudents").insert([{student_id:user?.id, tdsub_id:tdSub[0].tdsub_id}])
+    await supabase.from("SubStudents").insert([{student_id:user?.id, tdsub_id:tdSub[0].tdsub_id, role:"owner"}])
     
     //Insert the other students
     if(selectedStudents.length != 0){
