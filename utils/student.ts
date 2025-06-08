@@ -24,7 +24,7 @@ export const GetStudentById = async (StudentId:string)=>{
     const student = await supabase.from("Student_info").select("*").eq("student_id", StudentId).single()
     
     if(student){
-        return student
+        return student.data as Student
     }
     return null
 }

@@ -1,5 +1,6 @@
 "use server"
 
+import { GetUser } from "./getuser";
 import { createClient } from "./supabase/server";
 import { Course } from "./types";
 
@@ -48,4 +49,21 @@ export const calcTdSubmitPercentage =async(classId:string,tdId:string, group_num
   }
   
 
+}
+
+
+export const ChekcSubmission =async (tdId:string, classId:string)=>{
+    const supabase = await createClient()
+    const user = await GetUser()
+    const { data } = await supabase
+      .from("SubStudent_info")
+      .select("*")
+      .eq("student_id", user?.id as string)
+      .eq("td_id", tdId)
+      .eq("class_id", classId);
+    if(data){
+      if(data.length>0)
+        return true
+    }
+    return false
 }

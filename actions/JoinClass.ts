@@ -4,7 +4,7 @@
 import { FindClassById, getClassById } from "@/utils/getclass";
 import { GetUser } from "@/utils/getuser";
 import { createGroup, findGroupByNum } from "@/utils/group";
-import { AddStudent } from "@/utils/student";
+import { AddStudent, GetStudentById } from "@/utils/student";
 import { createClient } from "@/utils/supabase/server"
 
 import {  z } from "zod";
@@ -75,17 +75,24 @@ export const JoinClass = async(state:unknown, formData:FormData)=>{
     
             
             //Add the user to studentClass table
-            const {error} = await supabase.from("studentClass").insert([
+            //first we need to check if he is already joined the class before
+            const {data} = await supabase.from("studentClass").select("*").eq("student_id", user?.id as string)
+            if(data?.length === 0){
+                 const {error} = await supabase.from("studentClass").insert([
                     {
                         student_id : user?.id as string,
                         class_id : class_id,
                         group_id : group?.group_id
                     }
-            ])
-            if(error){
+                ])
+                if(error){
                     console.log(error)
+                    throw error
+                }
+            }else{
                 return {JoinError:"You Joined this class Before"}
             }
+           
 
             //if everything goes right like life :(
             return {succes:"Joined Succefully"}

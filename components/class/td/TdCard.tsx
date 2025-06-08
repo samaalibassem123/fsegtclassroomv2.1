@@ -16,10 +16,11 @@ import { getCourseDocuments } from "@/utils/docs";
 import DocLoading from "@/components/skeletons/DocLoading";
 import ConfirmDeleteTd from "./ConfirmDeleteTd";
 import { AddComment } from "@/actions/Courses/AddComment";
-import { Send } from "lucide-react";
+import { CircleCheck, Send } from "lucide-react";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import CommentContainer from "../CommentContainer";
 import SubmissionForm from "../joined/SubmissionForm";
+import { ChekcSubmission } from "@/utils/TD";
 
 const Document = React.lazy(() => import("../Document"));
 
@@ -33,12 +34,23 @@ export default function TdCard({
   const date = new Date(td.created_at as string);
   const DATE = formatDate(date);
   const [docs, setDocs] = useState<Doc[]>([]);
+  const [submit, setSubmit] = useState(false)
+  const [State, setState] = useState("Loading state...") 
   //GET DOCUMENTS
   useEffect(() => {
     const GetDocs = async () => {
       const Docs = await getCourseDocuments(td.course_id as string);
       setDocs(Docs as Doc[]);
     };
+      //Check if he already submit his work before or not in the same td
+    const checkSubmission =async ()=>{
+      const checksubmission = await ChekcSubmission(td.course_id as string, td.class_id as string) 
+      if(!checksubmission){
+        setSubmit(true)
+      }
+      setState("Work is submitted")
+    }
+    checkSubmission()
     GetDocs();
   }, []);
 
@@ -112,7 +124,9 @@ export default function TdCard({
       {userRole === "teacher" ? (
         <ConfirmDeleteTd tdId={td.course_id as string} />
       ) : (
-        <SubmissionForm tdId={td.course_id as string} classId={td.class_id as string} />
+        submit ?
+        <SubmissionForm tdId={td.course_id as string} classId={td.class_id as string} />:
+        <div className={`text-sm border select-none  w-fit p-2 rounded-md mt-2 ${State==="Work is submitted"&& "bg-green-500"} text-white`}>{State==="Work is submitted"? <span className="flex gap-2 items-center justify-center">Work is submitted <CircleCheck className=" size-4" /></span>:<span className="dark:text-white text-black animate-pulse">{State}</span>}</div>
       )}
     </Accordion>
   );

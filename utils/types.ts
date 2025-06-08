@@ -18,6 +18,8 @@ export interface Student {
   class_id? :string|undefined|null;
   group_id? :string|undefined|null;
   group_num? :string|undefined|null;
+  StudentClass_id? :string|undefined|null;
+
 }
 
 
