@@ -41,6 +41,7 @@
     "date-fns": "^3.6.0",
     "framer-motion": "^12.6.3",
     "immer": "^10.1.1",
+    "input-otp": "^1.4.2",
     "livekit-server-sdk": "^2.11.0",
     "lucide-react": "^0.486.0",
     "motion": "^12.6.3",

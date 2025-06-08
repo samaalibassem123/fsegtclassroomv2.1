@@ -45,8 +45,8 @@ export default function SubmissionCard({
   Percentage()
   }, [])
   
-
-  
+  const [search, setSearch] = useState("");
+  const filtredOnwers = tdSubOwners.filter(owners=>owners.student_name?.toLowerCase().includes(search.toLowerCase())) 
 
   return (
     <Accordion
@@ -68,9 +68,9 @@ export default function SubmissionCard({
           <DonutChart Percentage={percen as number} />
           <div className="p-2 space-y-3">
               <p className=" underline ">Students Submissions :</p>
-                <Input placeholder="search by student name..." />
+                <Input placeholder="search by student name..." onChange={e=>setSearch(e.target.value)}/>
                 <div className="space-y-2.5 group">
-                  {tdSubOwners.length ===0?<span className="text-sm p-1 text-gray-600">No work submitted for now 😞</span>:tdSubOwners.map((student:SubStudentInfoView)=>(
+                  {filtredOnwers.length ===0?<span className="text-sm p-1 text-gray-600">No work submitted for now 😞</span>:filtredOnwers.map((student:SubStudentInfoView)=>(
                     <Suspense fallback={<SubOwnerLoading/>} key={student.tdsub_id as string}>
                       <StudentSubCard  SubOwner={student} />
                     </Suspense>

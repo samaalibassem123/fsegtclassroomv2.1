@@ -120,3 +120,13 @@ export const getAllTdDocuments = async (ClassId:string)=>{
     }
     return []
 }
+
+
+export const getSubDocs = async (subId:string)=>{
+    const supabase = await createClient()
+    const {data, error} = await supabase.from("SubDocs_info").select("*").eq("tdsub_id", subId) 
+    if(error){
+        throw error
+    }
+    return data
+}

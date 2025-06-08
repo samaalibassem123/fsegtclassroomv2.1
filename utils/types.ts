@@ -104,5 +104,6 @@ export interface SubStudentInfoView{
   studentImg? :string|undefined|null;
   group_num? :string|undefined|null;
   role? :string|undefined|null;
+  descrption? :string|undefined|null;
   
 }

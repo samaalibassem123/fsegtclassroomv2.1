@@ -11,10 +11,12 @@ import React, { useEffect, useState } from "react";
 import DeleteComment from "./DeleteComment";
 import { GetUser } from "@/utils/getuser";
 import { User } from "@supabase/supabase-js";
+import loading from "@/app/loading";
 
 export default function CommentContainer({ courseId }: { courseId: string }) {
   const [user, setUser] = useState<User>()
   const [comments, setComments] = useState<Comment[]>([]);
+  const [Loading, setloading] = useState(true)
   useEffect(() => {
     const getUser = async()=>{
       const  USER = await GetUser();
@@ -27,9 +29,10 @@ export default function CommentContainer({ courseId }: { courseId: string }) {
       if (Comments) {
         setComments(Comments as Comment[]);
       }
+      setloading(false)
     };
     fetchComments();
-
+    
     const supabase = createClient();
     const channel = supabase
       .channel("get-all-comments")
@@ -71,6 +74,7 @@ export default function CommentContainer({ courseId }: { courseId: string }) {
 
   return (
     <div className="flex flex-col">
+      {Loading && <span className="text-sm text-gray-700 animate-pulse">Loading Comments... </span>}
       {comments.length != 0 && (
         <ScrollArea className="h-auto max-h-60 overflow-y-auto">
           {comments.map((comment) => (
@@ -96,7 +100,7 @@ export default function CommentContainer({ courseId }: { courseId: string }) {
           ))}
         </ScrollArea>
       )}
-      {comments.length === 0 && (
+      {comments.length === 0 && Loading === false && (
         <p className="text-sm text-gray-500 block">There is no comments</p>
       )}
     </div>

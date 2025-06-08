@@ -50,3 +50,20 @@ export const getSubOwners = async (tdId:string, groupNum:string)=>{
     }
     return data
 }
+
+export const getSubStudents = async(tdsubId:string)=>{
+    const supabase = await createClient()
+    const {data, error} = await supabase.from("SubStudent_info").select("*").eq("tdsub_id", tdsubId).eq("role",null)
+    if(error){
+        throw error
+    }
+    return data
+}
+export const getSubOwner = async(tdsubId:string)=>{
+    const supabase = await createClient()
+    const {data, error} = await supabase.from("SubStudent_info").select("*").eq("tdsub_id", tdsubId).eq("role", "owner")
+    if(error){
+        throw error
+    }
+    return data
+}
