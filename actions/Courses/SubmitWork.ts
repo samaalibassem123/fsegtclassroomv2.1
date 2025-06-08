@@ -96,16 +96,13 @@ export const SubmitWork = async (
     const student = await GetStudentById(user?.id as string);
     const StudentClassId = student?.StudentClass_id as string;
     if (StudentClassId) {
-      const { error } = await supabase.from("SubStudents").insert([
+      await supabase.from("SubStudents").insert([
         {
           StudentClass_id: StudentClassId as string,
           tdsub_id: tdSub[0].tdsub_id as string,
           role: "owner",
         },
       ]);
-      if (error) {
-        throw error;
-      }
     }
 
     //Insert the other students
@@ -113,7 +110,7 @@ export const SubmitWork = async (
       selectedStudents.map(async (std: Student) => {
         await supabase.from("SubStudents").insert([
           {
-            StudentClassId: std?.StudentClass_id as string,
+            StudentClass_id: std?.StudentClass_id as string,
             tdsub_id: tdSub[0].tdsub_id as string,
           },
         ]);
