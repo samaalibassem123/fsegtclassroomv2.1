@@ -107,6 +107,7 @@ export const SubmitWork = async (
 
     //Insert the other students
     if (selectedStudents.length != 0) {
+
       selectedStudents.map(async (std: Student) => {
         await supabase.from("SubStudents").insert([
           {

@@ -28,25 +28,27 @@ import { toast } from "sonner";
 import { ComputeFileHash } from "@/utils/Files";
 import { SubmitWork } from "@/actions/Courses/SubmitWork";
 
-
-
-
-
-export default function SubmissionForm({ tdId, classId }: { tdId: string, classId:string }) {
+export default function SubmissionForm({
+  tdId,
+  classId,
+}: {
+  tdId: string;
+  classId: string;
+}) {
   //HANLE FILES
   const [files, setFiles] = useState<File[]>([]);
-    const Sumbitref = useRef<HTMLButtonElement>(null);
-    const [documents, setDocuments] = useState<Doc[]>([]);
-    const [fileProgess, setProgess] = useState(0);
-    const [ProgessText, setProgressText] = useState("");
-    
-  const HandleFilesData = (data:File[])=>{
-    setFiles(data)
-     //Initializing the defualt values
-    setProgess(0)
-    setProgressText("")
-  }
-    //Add files to file storage in supabase
+  const Sumbitref = useRef<HTMLButtonElement>(null);
+  const [documents, setDocuments] = useState<Doc[]>([]);
+  const [fileProgess, setProgess] = useState(0);
+  const [ProgessText, setProgressText] = useState("");
+
+  const HandleFilesData = (data: File[]) => {
+    setFiles(data);
+    //Initializing the defualt values
+    setProgess(0);
+    setProgressText("");
+  };
+  //Add files to file storage in supabase
   useEffect(() => {
     const AddToBuckets = async () => {
       //disable the submit button
@@ -128,11 +130,11 @@ export default function SubmissionForm({ tdId, classId }: { tdId: string, classI
                 {
                   position: "top-center",
                 }
-              )
-               if (Sumbitref.current) {
-                  Sumbitref.current.disabled = false;
-                  Sumbitref.current.innerHTML = "submit";
-                };
+              );
+              if (Sumbitref.current) {
+                Sumbitref.current.disabled = false;
+                Sumbitref.current.innerHTML = "submit";
+              }
             } else {
               //Update the progess bar
               setProgess((fileProgess) => {
@@ -184,11 +186,11 @@ export default function SubmissionForm({ tdId, classId }: { tdId: string, classI
   const [students, setStudents] = useState<Student[]>([]);
   const [user, setUser] = useState<User>();
   const [SelectedStudents, setSelectedStutends] = useState<Student[]>([]);
-  
-  const HandleSelectedStudents = (data:Student[])=>{
-    console.log(data)
-    setSelectedStutends(data)
-  }
+
+  const HandleSelectedStudents = (data: Student[]) => {
+    console.log(data);
+    setSelectedStutends(data);
+  };
   useEffect(() => {
     const getStds = async () => {
       const Students = await GetStudents(classId as string);
@@ -205,23 +207,26 @@ export default function SubmissionForm({ tdId, classId }: { tdId: string, classI
   }, []);
 
   //SUBMIT WORK
-    const [state, action, pending] = useActionState(
-      (state: any, formdata: FormData) =>
-        SubmitWork(state, formdata, documents,SelectedStudents, tdId, classId),
-      undefined
-    );
+  const [state, action, pending] = useActionState(
+    (state: any, formdata: FormData) =>
+      SubmitWork(state, formdata, documents, SelectedStudents, tdId, classId),
+    undefined
+  );
 
-    useEffect(
-      ()=>{
-        if(state?.warning){
-          toast.warning(state.warning, {position:"top-center",style:{backgroundColor: "#e6e600", color:"white"}})
-        }
-        else if(state?.succes){
-          toast.success(state.succes, {position:"top-center",style:{backgroundColor: "green", color:"white"}})
-          window.location.reload()
-        }
-      }
-      ,[state])
+  useEffect(() => {
+    if (state?.warning) {
+      toast.warning(state.warning, {
+        position: "top-center",
+        style: { backgroundColor: "#e6e600", color: "white" },
+      });
+    } else if (state?.succes) {
+      toast.success(state.succes, {
+        position: "top-center",
+        style: { backgroundColor: "green", color: "white" },
+      });
+      window.location.reload();
+    }
+  }, [state]);
 
   return (
     <Drawer>
@@ -239,12 +244,11 @@ export default function SubmissionForm({ tdId, classId }: { tdId: string, classI
         <form action={action} className="h-[80svh] overflow-y-scroll space-y-4">
           <div className="flex flex-col gap-2 m-2 ">
             <Label className="text-lg">📚 Document :</Label>
-            <FileUploader sendFiles={HandleFilesData}/>
-           <span className="text-sm text-gray-500 p-1">{ProgessText}</span>
-                <Progress value={fileProgess} className="mt-2" />
+            <FileUploader sendFiles={HandleFilesData} />
+            <span className="text-sm text-gray-500 p-1">{ProgessText}</span>
+            <Progress value={fileProgess} className="mt-2" />
           </div>
           <Separator />
-
           <div className="flex flex-col gap-2">
             <Label className="text-lg">
               Description:
@@ -252,10 +256,12 @@ export default function SubmissionForm({ tdId, classId }: { tdId: string, classI
                 (optional)
               </span>
             </Label>
-            <Textarea name="desc" placeholder="Add A description for your submission if u want" />
+            <Textarea
+              name="desc"
+              placeholder="Add A description for your submission if u want"
+            />
           </div>
           <Separator />
-
           <div className="flex flex-col gap-2 w-full">
             <Label className="text-xl ">
               Add Students that worked with you in this project:
@@ -266,14 +272,28 @@ export default function SubmissionForm({ tdId, classId }: { tdId: string, classI
             {students.length === 1 ? (
               "There is no students in this class"
             ) : (
-              <SelectStudents sendStudents={HandleSelectedStudents} people={students} user={user as User} />
+              <SelectStudents
+                sendStudents={HandleSelectedStudents}
+                people={students}
+                user={user as User}
+              />
             )}
           </div>
-          <Separator /> <DrawerFooter className="border-t-black/40 border-t-[1px]">
-          <Button  disabled={pending} className=" cursor-pointer" ref={Sumbitref}>{pending ? <span className=" animate-pulse">Submitting ...</span>: "submit"}</Button>
-        </DrawerFooter>
+          <Separator />{" "}
+          <DrawerFooter className="border-t-black/40 border-t-[1px]">
+            <Button
+              disabled={pending}
+              className=" cursor-pointer"
+              ref={Sumbitref}
+            >
+              {pending ? (
+                <span className=" animate-pulse">Submitting ...</span>
+              ) : (
+                "submit"
+              )}
+            </Button>
+          </DrawerFooter>
         </form>
-     
       </DrawerContent>
     </Drawer>
   );
