@@ -194,7 +194,7 @@ export default function SubmissionForm({
   };
   useEffect(() => {
     const getStds = async () => {
-      const Students = await GetGroupStudents(classId as string);
+      const Students = await GetGroupStudents(classId, tdId);
       setStudents(Students as Student[]);
       setStdLoading(false);
     };
@@ -272,7 +272,7 @@ export default function SubmissionForm({
               </span>
             </Label>
             {students.length === 1 ? (
-              "There is no students in this class"
+              "There is no students for this Td that u can select"
             ) : (
                 StdLoading?<span className="text-sm animate-pulse text-gray-500">Loading Students...</span> :
               <SelectStudents

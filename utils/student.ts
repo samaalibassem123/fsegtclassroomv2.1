@@ -3,7 +3,7 @@
 import { User } from "@supabase/supabase-js";
 
 import { createClient } from "./supabase/server";
-import { Student } from "./types";
+import { Student, SubStudentInfoView } from "./types";
 import { GetUser } from "./getuser";
 
 export const AddStudent = async (user: User | null) => {
@@ -43,18 +43,19 @@ export const GetStudents = async (classId: string | null) => {
   return data as Student[];
 };
 
-export const GetGroupStudents = async (classId: string) => {
-
+export const GetGroupStudents = async (classId: string, tdId: string) => {
   const supabase = await createClient();
-  const user = await GetUser()
-  const owner = await GetStudentById(user?.id as string)
-  const groupNum = owner?.group_num
-  //Get the id of the students that joined the class
-  const { data } = await supabase
-    .from("Student_info")
-    .select("*")
-    .eq("class_id", classId)
-    .eq("group_num", groupNum);
+  const user = await GetUser();
+  const owner = await GetStudentById(user?.id as string);
+  const groupNum = owner?.group_num;
+
+  //get students that he can select using the function created in supbase selecstd
+  const { data, error } = await supabase.rpc("selecstd", {
+    groupnum: groupNum,
+    classid: classId,
+    tdid: tdId,
+  });
+  if (error) throw error;
 
   return data as Student[];
 };
