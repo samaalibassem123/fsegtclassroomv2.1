@@ -19,7 +19,7 @@ import { ArrowDownToLine } from "lucide-react";
 import { Doc, Student } from "@/utils/types";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
-import { GetStudents } from "@/utils/student";
+import { GetGroupStudents, GetStudents } from "@/utils/student";
 import { GetUser } from "@/utils/getuser";
 import { User } from "@supabase/supabase-js";
 import { Progress } from "@/components/ui/progress";
@@ -186,6 +186,7 @@ export default function SubmissionForm({
   const [students, setStudents] = useState<Student[]>([]);
   const [user, setUser] = useState<User>();
   const [SelectedStudents, setSelectedStutends] = useState<Student[]>([]);
+  const [StdLoading, setStdLoading] = useState(true);
 
   const HandleSelectedStudents = (data: Student[]) => {
     console.log(data);
@@ -193,8 +194,9 @@ export default function SubmissionForm({
   };
   useEffect(() => {
     const getStds = async () => {
-      const Students = await GetStudents(classId as string);
+      const Students = await GetGroupStudents(classId as string);
       setStudents(Students as Student[]);
+      setStdLoading(false);
     };
     const getuser = async () => {
       const USER = await GetUser();
@@ -272,6 +274,7 @@ export default function SubmissionForm({
             {students.length === 1 ? (
               "There is no students in this class"
             ) : (
+                StdLoading?<span className="text-sm animate-pulse text-gray-500">Loading Students...</span> :
               <SelectStudents
                 sendStudents={HandleSelectedStudents}
                 people={students}
