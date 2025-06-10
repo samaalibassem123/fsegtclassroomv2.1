@@ -29,7 +29,7 @@ import { NavUser } from "./nav-user";
 
 import { Button } from "./ui/button";
 import Link from "next/link";
-import { Class, NavGroup, Teacher } from "@/utils/types";
+import { Class, Group, NavGroup, Teacher } from "@/utils/types";
 import { formatDate } from "@/utils/date";
 
 import { Separator } from "./ui/separator";
@@ -37,7 +37,7 @@ import ShowCode from "./class/ShowCode";
 import { getGroups } from "@/utils/group";
 
 export function SidebarLeft({
-  classType,
+  classType = "created",
   CLass,
   User,
   teacher,
@@ -48,7 +48,6 @@ export function SidebarLeft({
   User: User | null;
   teacher?: Teacher;
 }) {
-  const ClassType = classType === "td" ? "joined" : "created";
   const USER = {
     name: User?.user_metadata.full_name as string,
     email: User?.email as string,
@@ -57,72 +56,74 @@ export function SidebarLeft({
   const pathname = usePathname();
   // Function to check if a link is active
   const ActiveLink = (href: string) => pathname === href;
-  
+
   const data = {
     navMain: [
       {
         title: "Ask AI",
-        url: `/user/${User?.id}/class/${ClassType}/${CLass.class_id}/ai/`,
+        url: `/user/${User?.id}/class/${classType}/${CLass.class_id}/ai/`,
         icon: Sparkles,
         isActive: ActiveLink(
-          `/user/${User?.id}/class/${ClassType}/${CLass.class_id}/ai`
+          `/user/${User?.id}/class/${classType}/${CLass.class_id}/ai`
         ),
       },
       {
         title: "Home",
-        url: `/user/${User?.id}/class/${ClassType}/${CLass.class_id}/`,
+        url: `/user/${User?.id}/class/${classType}/${CLass.class_id}/`,
         icon: Home,
         isActive: ActiveLink(
-          `/user/${User?.id}/class/${ClassType}/${CLass.class_id}`
+          `/user/${User?.id}/class/${classType}/${CLass.class_id}`
         ),
       },
       {
         title: "Course Documents",
-        url: `/user/${User?.id}/class/${ClassType}/${CLass.class_id}/courseDocs/`,
+        url: `/user/${User?.id}/class/${classType}/${CLass.class_id}/courseDocs/`,
         icon: FileSearch2Icon,
         badge: "10",
         isActive: ActiveLink(
-          `/user/${User?.id}/class/${ClassType}/${CLass.class_id}/courseDocs`
+          `/user/${User?.id}/class/${classType}/${CLass.class_id}/courseDocs`
         ),
       },
       {
         title: "TD Documents",
-        url: `/user/${User?.id}/class/${ClassType}/${CLass.class_id}/TdDocs/`,
+        url: `/user/${User?.id}/class/${classType}/${CLass.class_id}/TdDocs/`,
         icon: FileSearch,
         badge: "10",
         isActive: ActiveLink(
-          `/user/${User?.id}/class/${ClassType}/${CLass.class_id}/TdDocs`
+          `/user/${User?.id}/class/${classType}/${CLass.class_id}/TdDocs`
         ),
       },
       {
         title: "Meet",
-        url: `/user/${User?.id}/class/${ClassType}/${CLass.class_id}/meet/`,
+        url: `/user/${User?.id}/class/${classType}/${CLass.class_id}/meet/`,
         icon: Video,
         badge: "10",
         isActive: ActiveLink(
-          `/user/${User?.id}/class/${ClassType}/${CLass.class_id}/meet`
+          `/user/${User?.id}/class/${classType}/${CLass.class_id}/meet`
         ),
       },
       {
         title: "students",
-        url: `/user/${User?.id}/class/${ClassType}/${CLass.class_id}/students/`,
+        url: `/user/${User?.id}/class/${classType}/${CLass.class_id}/students/`,
         icon: Users,
         badge: "10",
         isActive: ActiveLink(
-          `/user/${User?.id}/class/${ClassType}/${CLass.class_id}/students`
+          `/user/${User?.id}/class/${classType}/${CLass.class_id}/students`
         ),
       },
     ],
   };
   //GET GROUPS
-  const [groups, setGroups] = React.useState<NavGroup[]>([])
-  React.useEffect(()=>{
-    const Groups =async ()=>{
-      const gps = await getGroups(CLass,ClassType)
-      if(gps) setGroups(gps)
-    }
+  const [groups, setGroups] = React.useState<NavGroup[]>([]);
+  const [loadingGroups , setLoadingGroups] = React.useState(true)
+  React.useEffect(() => {
+    const Groups = async () => {
+      const gps = await getGroups(CLass, classType);
+      if (gps) setGroups(gps);
+    };
     Groups();
-  },[])
+    setLoadingGroups(false)
+  }, []);
 
   const { isMobile } = useSidebar();
 
@@ -144,13 +145,14 @@ export function SidebarLeft({
         <NavMain items={data.navMain} />
       </SidebarHeader>
       <SidebarContent>
-        <NavGroups groups={groups} />
+        
+        {loadingGroups ? <span className="text-xs text-gray-500 p-4"> loadingGroups </span> :<NavGroups groups={groups} />}
       </SidebarContent>
       <SidebarRail />
       <Separator />
       <SidebarFooter className="lg:hidden">
         <div className="sm:hidden w-full text-sm space-y-2">
-          {ClassType === "joined" && (
+          {classType === "joined" && (
             <>
               {" "}
               <p className="font-semibold">👨‍🏫 Teacher Name:</p>

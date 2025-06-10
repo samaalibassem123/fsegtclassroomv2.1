@@ -46,7 +46,7 @@ export default async function Layout({
 
   return (
     <SidebarProvider>
-      <SidebarLeft teacher={teacher} classType="td" CLass={CLass} User={user} />
+      <SidebarLeft teacher={teacher} classType="joined" CLass={CLass} User={user} />
       <SidebarInset>
         <header className="sticky top-0 backdrop-blur-sm flex h-14 shrink-0 items-center gap-2 z-50 ">
           <div className="flex flex-1 items-center gap-2 px-3 ">
