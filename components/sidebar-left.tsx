@@ -5,6 +5,7 @@ import {
   FileSearch2Icon,
   Home,
   LogOutIcon,
+  Presentation,
   Sparkles,
   Users,
   Video,
@@ -76,6 +77,14 @@ export function SidebarLeft({
         ),
       },
       {
+        title: "Board",
+        url: `/user/${User?.id}/class/${classType}/${CLass.class_id}/draw/`,
+        icon: Presentation,
+        isActive: ActiveLink(
+          `/user/${User?.id}/class/${classType}/${CLass.class_id}/draw`
+        ),
+      },
+      {
         title: "Course Documents",
         url: `/user/${User?.id}/class/${classType}/${CLass.class_id}/courseDocs/`,
         icon: FileSearch2Icon,
@@ -115,14 +124,14 @@ export function SidebarLeft({
   };
   //GET GROUPS
   const [groups, setGroups] = React.useState<NavGroup[]>([]);
-  const [loadingGroups , setLoadingGroups] = React.useState(true)
+  const [loadingGroups, setLoadingGroups] = React.useState(true);
   React.useEffect(() => {
     const Groups = async () => {
       const gps = await getGroups(CLass, classType);
       if (gps) setGroups(gps);
     };
     Groups();
-    setLoadingGroups(false)
+    setLoadingGroups(false);
   }, []);
 
   const { isMobile } = useSidebar();
@@ -145,8 +154,11 @@ export function SidebarLeft({
         <NavMain items={data.navMain} />
       </SidebarHeader>
       <SidebarContent>
-        
-        {loadingGroups ? <span className="text-xs text-gray-500 p-4"> loadingGroups </span> :<NavGroups groups={groups} />}
+        {loadingGroups ? (
+          <span className="text-xs text-gray-500 p-4"> loadingGroups </span>
+        ) : (
+          <NavGroups groups={groups} />
+        )}
       </SidebarContent>
       <SidebarRail />
       <Separator />

@@ -1,6 +1,5 @@
 import { FloatingPaths } from "@/components/animations/FloatingPaths";
 import GoogleForm from "@/components/auth/GoogleForm";
-import Background from "@/components/Background";
 
 import React from "react";
 
